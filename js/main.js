@@ -41,7 +41,7 @@ function CreateTable(arr){
             tagUL_completed.innerHTML = content;
         }
     });
-    // tagUL_todo.innerHTML = content;
+
 }
 
 function AddTask(arr) {
@@ -51,16 +51,39 @@ function AddTask(arr) {
 function DeleteTask(id) {
     // console.log(id);
     listTask.deleteTask(id);
-    CreateTable(listTask.arr);
+    // CreateTable(listTask.arr);
 
 }
 function ChangeStatus(id) {
+    /**
+     * 1. Tạo 1 mảng chứa task completed
+     * 2. Lấy task trong mảng cũ thêm vào mảng mới
+     * 3. Xóa task ở ul todo và thêm vào ở ul completed
+     */
+    var arr2 = [];
     var task = listTask.getTaskById(id);;
-    // console.log(task);
-    task.status = task.status === 'todo' ? "completed" : "todo"
-    listTask.updateTask(task);
-    console.log('Change Status Success!');
-    CreateTable(listTask.arr)
+    // // console.log(task);
+    if( task.status === 'todo'){
+        task.status =  task.status === 'todo'? "completed" : "todo"
+        //Cách 2 mảng
+        // listTask.deleteTask(task.id);
+        arr2.push(task);
+        CreateTable(arr2)
+        console.log(task);
+    }else if(task.status === 'completed'){
+        task.status =  task.status === 'completed'? "todo" : "completed" 
+        //Cách 2 mảng
+        // arr2.deleteTask(task.id);
+        // listTask.addTask(task);
+        CreateTable(listTask.arr)
+        console.log(task);
+    }
+    console.log(arr2);
+    //Cách cũ
+    // listTask.updateTask(task);
+    
+
+    // console.log('Change Status Success!');
 }
 function getEle(id) {
     return document.getElementById(id);
