@@ -1,84 +1,95 @@
 var validation = new Validation();
-var listTask = new TaskList();
+// var listTask = new TaskList();
+var listTask_todo = new TaskList();
+var listTask_completed = new TaskList();
+
+getLocalStorage();
 getEle('addItem').addEventListener('click', function () {
 
     var layTask_Name = getEle('newTask').value;
     var layTask_Status = 'todo';
     // console.log(layTask_Input);
     var isValid = true;
-    isValid &= validation.kiemTraRong(layTask_Name, 'notiInput', '(*) Vui lòng nhập thông tin') && validation.kiemTraTrungTask(layTask_Name, 'notiInput', '(*) Đã có task trùng tên', listTask.arr);
+    isValid &= validation.kiemTraRong(layTask_Name, 'notiInput', '(*) Vui lòng nhập thông tin') && validation.kiemTraTrungTask(layTask_Name, 'notiInput', '(*) Đã có task trùng tên', listTask_todo.arr);
 
     var task = new Task(layTask_Name, layTask_Status);
 
     if (!isValid) return;
     console.log('thêm Thành công');
 
-    listTask.addTask(task);
-    console.log(listTask.arr);
-    AddTask(listTask.arr);
+    listTask_todo.addTask(task);
+    console.log(listTask_todo.arr);
+    AddTask(listTask_todo.arr);
     // listTask.timViTri(task.id);
+    setLocalStorage();
 })
 
-function CreateTable(arr){
-    var tagUL_todo = getEle('todo');
-    var tagUL_completed = getEle('completed');
-    var content = '';
-    arr.forEach(function (item) {
-        content += `
-        <li>
-            <span>${item.name}</span> 
+function CreateTable(task){
+    // var tagUL_todo = getEle('todo');
+    // var tagUL_completed = getEle('completed');
+    return `<li>
+            <span>${task.name}</span> 
             <div>
-                <button><i class="fa fa-trash-alt" id="delete_icon" onclick="DeleteTask(${item.id})"></i></button> 
-                <button><i class="fa fa-check-circle" id="todo_icon" onclick="ChangeStatus(${item.id})"></i></button>
+                <button><i class="fa fa-trash-alt" id="delete_icon" onclick="DeleteTask(${task.id})"></i></button> 
+                <button><i class="fa fa-check-circle" id="todo_icon" onclick="ChangeStatus(${task.id})"></i></button>
             </div>
-        </li>         
-        `
-        if(item.status == 'todo'){
-            tagUL_todo.innerHTML = content;
-            tagUL_completed.innerHTML = '';
-        }else if(item.status == 'completed'){
-            tagUL_todo.innerHTML = '';
-            tagUL_completed.innerHTML = content;
-        }
+        </li>`
+        // if(item.status == 'todo'){
+        //     tagUL_todo.innerHTML = content;
+        //     tagUL_completed.innerHTML = '';
+        // }else if(item.status == 'completed'){
+        //     tagUL_todo.innerHTML = '';
+        //     tagUL_completed.innerHTML = content;
+        // 
+    };
+
+function AddTask() {
+    var tagUL_todo = getEle('todo');
+    tagUL_todo.innerHTML ='';
+    var tagUL_completed = getEle('completed');
+    tagUL_completed.innerHTML ='';
+    listTask_todo.arr.forEach(function(item) {
+        tagUL_todo.innerHTML += CreateTable(item);
     });
-
+    listTask_completed.arr.forEach(function(item) {
+        tagUL_completed.innerHTML += CreateTable(item);
+    })
+    setLocalStorage();
 }
-
-function AddTask(arr) {
-  CreateTable(arr);
-}
-
 function DeleteTask(id) {
     // console.log(id);
-    listTask.deleteTask(id);
-    // CreateTable(listTask.arr);
-
+    listTask_todo.deleteTask(id);
+    listTask_completed.deleteTask(id);
+    AddTask();
+    setLocalStorage();
 }
 function ChangeStatus(id) {
     /**
-     * 1. Tạo 1 mảng chứa task completed
-     * 2. Lấy task trong mảng cũ thêm vào mảng mới
-     * 3. Xóa task ở ul todo và thêm vào ở ul completed
+     * 1. Lấy task trong mảng todo thêm vào mảng complete (ngược lại)
+     * 2. Xóa task ở ul todo và thêm vào ở ul completed (ngược lại)
      */
-    var arr2 = [];
-    var task = listTask.getTaskById(id);;
+    var task_todo = listTask_todo.getTaskById(id);
+    var task_completed = listTask_completed.getTaskById(id);
+ 
     // // console.log(task);
-    if( task.status === 'todo'){
-        task.status =  task.status === 'todo'? "completed" : "todo"
+    if( listTask_todo.arr.length > 0 && task_todo.status === 'todo'){
+        task_todo.status = task_todo.status === 'todo'? "completed" : "todo"
         //Cách 2 mảng
-        // listTask.deleteTask(task.id);
-        arr2.push(task);
-        CreateTable(arr2)
-        console.log(task);
-    }else if(task.status === 'completed'){
-        task.status =  task.status === 'completed'? "todo" : "completed" 
+        listTask_completed.addTask(task_todo);
+        listTask_todo.deleteTask(task_todo.id);
+        AddTask();
+        // console.log(listTask_todo.arr);
+        // console.log(listTask_completed.arr);
+
+    }else if(listTask_completed.arr.length > 0 && task_completed.status === 'completed'){
+        task_completed.status =  task_completed.status === 'completed'?  "todo" : "completed"
         //Cách 2 mảng
-        // arr2.deleteTask(task.id);
-        // listTask.addTask(task);
-        CreateTable(listTask.arr)
-        console.log(task);
+        listTask_todo.addTask(task_completed);
+        listTask_completed.deleteTask(task_completed.id);
+        AddTask();
+        
     }
-    console.log(arr2);
+
     //Cách cũ
     // listTask.updateTask(task);
     
@@ -88,13 +99,14 @@ function ChangeStatus(id) {
 function getEle(id) {
     return document.getElementById(id);
 }
-// function setLocalStorage() {
-//     localStorage.setItem('DSTask', JSON.stringify(listTask.arr)); //stringify chuyển value thành chuỗi
-// }
-// function getLocalStorage() {
-//     if (localStorage.getItem('DSTask')) {
-//         listTask.arr = JSON.parse(localStorage.getItem('DSTask'));
-//          taoBang(listTask.arr);
-//     }
-
-
+function setLocalStorage() {
+    localStorage.setItem('DSTask_TODO', JSON.stringify(listTask_todo.arr)); //stringify chuyển value thành chuỗi
+    localStorage.setItem('DSTask_DONE', JSON.stringify(listTask_completed.arr));
+}
+function getLocalStorage() {
+    if (localStorage.getItem('DSTask')) {
+        listTask_todo.arr = JSON.parse(localStorage.getItem('DSTask_TODO'));
+        listTask_completed.arr = JSON.parse(localStorage.getItem('DSTask_DONE'));
+         AddTask();
+    }
+}
