@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>ToDoList</title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
+    />
+
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  </head>
+
+  <body>
+    <div class="card">
+      <div class="card__header">
+        <img src="./img/X2oObC4.png" />
+      </div>
+      <!-- <h2>hello!</h2> -->
+      <div class="card__body">
+        <div class="card__content">
+          <div class="card__title">
+            <h2>My Tasks</h2>
+            <p>September 9,2020</p>
+          </div>
+          <div class="card__add">
+            <input
+              id="newTask"
+              type="text"
+              placeholder="Enter an activity..."
+            />
+            <button id="addItem">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+          <div id="notiInput" class="alert-danger" style="display: none"></div>
+          <div class="card__todo">
+            <!-- Uncompleted tasks -->
+            <ul class="todo" id="todo"></ul>
+            <!-- Completed tasks -->
+            <ul class="todo" id="completed"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script>
+      $(function () {
+        $(".toggle-btn").click(function () {
+          $(".filter-btn").toggleClass("open");
+        });
+
+        $(".filter-btn a").click(function () {
+          $(".filter-btn").removeClass("open");
+        });
+      });
+    </script>
+
+    <!-- Main JS -->
+    <script src="./js/Task.js"></script>
+    <script src="./js/TaskList.js"></script>
+    <script src="./js/Validation.js"></script>
+    <script src="./js/main.js"></script>
+
+
+  </body>
+</html>
