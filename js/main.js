@@ -35,23 +35,15 @@ function CreateTable(arr){
         `
         if(item.status == 'todo'){
             tagUL_todo.innerHTML = content;
+            tagUL_completed.innerHTML = '';
         }else if(item.status == 'completed'){
+            tagUL_todo.innerHTML = '';
             tagUL_completed.innerHTML = content;
         }
     });
-    tagUL_todo.innerHTML = content;
+    // tagUL_todo.innerHTML = content;
 }
-// function renderTaskList() {
-//     todoService.getListTask().then(function (e) {
-//         var t = "", n = "";
-//         getEle("todo").innerHTML = "",
-//             getEle("completed").innerHTML = "",
-//             e.data && e.data.length > 0 && e.data.forEach(function (e) {
-//                 "todo" === e.status ? (t += renderListLiHtml(e), getEle("todo").innerHTML = t) : "completed" === e.status && (n += renderListLiHtml(e), getEle("completed").innerHTML = n)
-//             }
-//             )
-//     }).catch(function (e) { console.log(e) })
-// } 
+
 function AddTask(arr) {
   CreateTable(arr);
 }
@@ -83,22 +75,3 @@ function getEle(id) {
 //     }
 
 
-// function changeStatus(e) {
-//     todoService.getTaskById(e).then(function (e) {
-//         var t = e.data; 
-//         return t.status = "todo" === t.status ? "completed" : "todo", todoService.updateTask(t) }).then(function () 
-//         { alert("Change Status Success!"), renderTaskList() 
-//         }) }
-
-// var todoService = new TodoService;
-
-//  function renderListLiHtml(e) { 
-//     return `<li>\n    <span>${e.textTask}</span>\n    
-//     <div class="buttons">\n      
-//     <button\n        class="remove"\n        onclick="deleteToDo(${e.id})"\n      >\n        <i class="fa fa-trash-alt"></i>\n      </button>\n      
-//     <button\n        class="complete"\n        onclick="changeStatus(${e.id})"\n      >\n        <i class="far fa-check-circle"></i>\n        <i class="fas fa-check-circle"></i>\n      </button>\n    </div>\n  </li>` }
-
-// function deleteToDo(e) { todoService.deleteTask(e).then(function () { alert("Delete Success!"), renderTaskList() }).catch(function (e) { console.log(e) }) } 
-
-
-// function getEle(e) { return document.getElementById(e) } renderTaskList(), getEle("addItem").addEventListener("click", function () { var e = getEle("newTask").value; if ("" !== e) { var t = new Task(e, "todo"); todoService.addTask(t).then(function () { alert("Add Success!"), renderTaskList(), getEle("newTask").value = "" }).catch(function (e) { console.log(e) }) } else alert("Task empty!") });
